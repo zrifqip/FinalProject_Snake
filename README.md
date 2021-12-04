@@ -13,4 +13,4 @@ di FP PBO ini kami membuat game snake, dimana game snake ini merupakan game yang
 ## Referensi yang akan dikembangkan
 * https://www.youtube.com/watch?v=bI6e6qjJ8JQ
 * https://zetcode.com/javagames/snake/
-* https://github.com/janbodnar/Java-Snake-Game
+
