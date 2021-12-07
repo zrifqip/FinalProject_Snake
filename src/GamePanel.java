@@ -8,8 +8,8 @@ import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener{
 
-	static final int SCREEN_WIDTH = 1280;
-	static final int SCREEN_HEIGHT = 720;
+	static final int SCREEN_WIDTH = 1250;
+	static final int SCREEN_HEIGHT = 700;
 	static final int UNIT_SIZE = 50;
 	static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
 	static final int DELAY = 175;
@@ -19,7 +19,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Image ball;
 	private Image apple;
 	private Image head;
-	int bodyParts = 6;
+	int bodyParts = 3;
 	int applesEaten;
 	int appleX;
 	int appleY;
@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	boolean running = false;
 	Random random;
 	
-	GamePanel(){
+	public GamePanel(){
 		random = new Random();
 		loadImages();
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
@@ -36,8 +36,10 @@ public class GamePanel extends JPanel implements ActionListener{
 		this.addKeyListener(new MyKeyAdapter());
 		startGame();
 	}
-	public void startGame() {
+	public void startGame(){
 		newApple();
+		x[0] = 600;
+		y[0] = 350;
 		running = true;
 		timer = new Timer(DELAY,this);
 		timer.start();
@@ -78,10 +80,11 @@ public class GamePanel extends JPanel implements ActionListener{
 				}
 			}
 			Toolkit.getDefaultToolkit().sync();
+
 			g.setColor(Color.red);
 			g.setFont( new Font("Arial",Font.BOLD, 40));
 			FontMetrics metrics = getFontMetrics(g.getFont());
-			g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+			g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
 		}
 		else {
 			gameOver(g);
@@ -92,6 +95,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
 	}
+
 	public void move(){
 		for(int i = bodyParts;i>0;i--) {
 			x[i] = x[i-1];
@@ -128,23 +132,60 @@ public class GamePanel extends JPanel implements ActionListener{
 				running = false;
 			}
 		}
+
 		//check if head touches left border
 		if(x[0] < 0) {
-			running = false;
+			for(int i = bodyParts;i>=0;i--)
+				y[i + 1] = y[i];
+			for(int i = bodyParts;i>=0;i--){
+				if(i == 0)
+					x[i] = x[i] - bodyParts;
+				else
+					x[i] = x[i-1];
+				if(x[i] < 0)
+					x[i] = SCREEN_WIDTH;
+			}
 		}
 		//check if head touches right border
 		if(x[0] > SCREEN_WIDTH) {
-			running = false;
+			for(int i = bodyParts;i>=0;i--)
+				y[i + 1] = y[i];
+			for(int i = bodyParts;i>=0;i--){
+				if(i == 0)
+					x[i] = x[i] + bodyParts;
+				else
+					x[i] = x[i-1];
+				if(x[i] > SCREEN_WIDTH)
+					x[i] = 0;
+			}
 		}
 		//check if head touches top border
 		if(y[0] < 0) {
-			running = false;
+			for(int i = bodyParts;i>=0;i--)
+				x[i + 1] = x[i];
+			for(int i = bodyParts;i>=0;i--){
+				if(i == 0)
+					y[i] = y[i] - bodyParts;
+				else
+					y[i] = y[i-1];
+				if(y[i] < 0)
+					y[i] = SCREEN_HEIGHT;
+			}
 		}
 		//check if head touches bottom border
 		if(y[0] > SCREEN_HEIGHT) {
-			running = false;
+			for(int i = bodyParts;i>=0;i--)
+				x[i + 1] = x[i];
+			for(int i = bodyParts;i>=0;i--){
+				if(i == 0)
+					y[i] = y[i] + bodyParts;
+				else
+					y[i] = y[i-1];
+				if(y[i] > SCREEN_HEIGHT)
+					y[i] = 0;
+			}
 		}
-		
+
 		if(!running) {
 			timer.stop();
 		}
@@ -152,7 +193,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void gameOver(Graphics g) {
 		//Score
 		g.setColor(Color.red);
-		g.setFont( new Font("Ink Free",Font.BOLD, 40));
+		g.setFont( new Font("Arial",Font.BOLD, 40));
 		FontMetrics metrics1 = getFontMetrics(g.getFont());
 		g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
 		//Game Over text
@@ -160,6 +201,11 @@ public class GamePanel extends JPanel implements ActionListener{
 		g.setFont( new Font("Ink Free",Font.BOLD, 75));
 		FontMetrics metrics2 = getFontMetrics(g.getFont());
 		g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+		g.setFont(new Font("Arial",Font.BOLD,40));
+		g.drawString("               " + "Press space to back to main menu", (SCREEN_WIDTH - metrics2.stringWidth(
+															"Press space to back to main menu")
+																)
+				                    					, 		SCREEN_HEIGHT/(3));
 	}
 	@Override
 	public void actionPerformed(ActionEvent e){
