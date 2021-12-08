@@ -21,6 +21,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Image ball;
 	private Image apple;
 	private Image head;
+	private Image level2;
+	private Image level3;
 	int bodyParts = 3;
 	int applesEaten;
 	int appleX;
@@ -29,6 +31,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	boolean running = false;
 	Random random;
 	private Menu menu;
+	private int level;
 	
 	public static enum STATE{
 		MENU,
@@ -53,7 +56,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	
 	public void startGame(){
 		newApple();
-		x[0] = 600;
+		x[0] = 1000;
 		y[0] = 350;
 		running = true;
 		timer = new Timer(DELAY,this);
@@ -69,6 +72,12 @@ public class GamePanel extends JPanel implements ActionListener{
 
 		ImageIcon iih = new ImageIcon("src/resources/head.png");
 		head = iih.getImage();
+		
+		ImageIcon ii2 = new ImageIcon("src/resources/level2.png");
+		level2 = ii2.getImage();
+		
+		ImageIcon ii3 = new ImageIcon("src/resources/level3.png");
+		level3 = ii3.getImage();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -93,7 +102,12 @@ public class GamePanel extends JPanel implements ActionListener{
 				g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
 			}
 			*/
-
+			
+			if(level == 2) {
+				g.drawImage(level2,0,0,null);
+			} else if(level == 3) {
+				g.drawImage(level3,0,0,null);
+			}
 
 			g.drawImage(apple, appleX, appleY, this);
 			for (int z = 0; z < bodyParts; z++) {
@@ -117,6 +131,21 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void newApple(){
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+		
+		if(level==2) {
+			while((appleX>=45 && appleX<=1195 && appleY <= 45)
+					||(appleX>=45 && appleX<=1195 && appleY >= 645)
+					||(appleX<=45 && appleY>=45 && appleY <= 645)
+					||(appleX>=1195 && appleY>=45 && appleY <= 645)) {
+				appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
+				appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+			}
+		} if(level==3) {
+			while((appleX>=400 && appleX<=845) && (appleY>=250 && appleY<=445)) {
+				appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
+				appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+			}
+		}
 	}
 
 	public void move(){
@@ -208,6 +237,19 @@ public class GamePanel extends JPanel implements ActionListener{
 					y[i] = 0;
 			}
 		}
+		
+		//check collission for level 2
+		if(level == 2) {
+			if((x[0]>=45 && x[0]<=1195 && y[0] <= 45)
+					||(x[0]>=45 && x[0]<=1195 && y[0] >= 645)
+					||(x[0]<=45 && y[0]>=45 && y[0] <= 645)
+					||(x[0]>=1195 && y[0]>=45 && y[0] <= 645))
+				running = false;
+		} else if (level == 3)
+			if((x[0]>=400 && x[0]<=845) && (y[0]>=250 && y[0]<=445)) {
+				running = false;
+			}
+				
 
 		if(!running) {
 			timer.stop();
@@ -293,13 +335,20 @@ public class GamePanel extends JPanel implements ActionListener{
 			}
 			} else if(state == STATE.LEVEL) {
 			if(mx >= 530 && mx <= 730) {
-				// play Button
+				// level 1
 				if(my >= 200 && my <= 275) {
+					level = 1;
 					GamePanel.state = GamePanel.STATE.GAME;
 				}
-				// quit Button
+				// level 2
+				if(my >= 350 && my <= 425) {
+					level = 2;
+					GamePanel.state = GamePanel.STATE.GAME;
+				}
+				// level 3
 				if(my >= 500 && my <= 575) {
-					System.exit(1);
+					level = 3;
+					GamePanel.state = GamePanel.STATE.GAME;
 				}
 			}
 			}
