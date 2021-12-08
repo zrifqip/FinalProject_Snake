@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener{
@@ -26,16 +28,28 @@ public class GamePanel extends JPanel implements ActionListener{
 	char direction = 'R';
 	boolean running = false;
 	Random random;
+	private Menu menu;
+	
+	public static enum STATE{
+		MENU,
+		GAME
+	}
+	
+	public static STATE state = STATE.MENU;
 	
 	public GamePanel(){
 		random = new Random();
+		menu = new Menu();
 		loadImages();
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
 		this.setBackground(Color.black);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
+		this.addMouseListener(new MouseInput());
 		startGame();
+		
 	}
+	
 	public void startGame(){
 		newApple();
 		x[0] = 600;
@@ -58,7 +72,12 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		draw(g);
+		
+		if(state == STATE.GAME) {
+			draw(g);
+		} else if(state == STATE.MENU) {
+			menu.render(g);
+		}
 	}
 	public void draw(Graphics g) {
 		
@@ -85,8 +104,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			g.setFont( new Font("Arial",Font.BOLD, 40));
 			FontMetrics metrics = getFontMetrics(g.getFont());
 			g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-		}
-		else {
+		} else {
 			gameOver(g);
 		}
 		
@@ -207,6 +225,14 @@ public class GamePanel extends JPanel implements ActionListener{
 																)
 				                    					, 		SCREEN_HEIGHT/(3));
 	}
+	
+//	public void menu(Graphics g) {
+//		Font fnt0 = new Font("arial", Font.BOLD, 50);
+//		g.setFont(fnt0);
+//		g.setColor(Color.WHITE);
+//		g.drawString("SNAKE GAME", GamePanel.SCREEN_WIDTH/2, 100);
+//	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e){
 		
@@ -221,6 +247,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	public class MyKeyAdapter extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
+			if(state == STATE.GAME) {
 			switch(e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				if(direction != 'R') {
@@ -243,6 +270,56 @@ public class GamePanel extends JPanel implements ActionListener{
 				}
 				break;
 			}
+			}
+		}
+	}
+	
+	private class MouseInput implements MouseListener {
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+//			public Rectangle playButton = new Rectangle (530, 200, 200, 75);
+//			public Rectangle settingButton = new Rectangle (530, 350, 200, 75);
+//			public Rectangle quitButton = new Rectangle (530, 500, 200, 75);
+			
+			int mx = e.getX();
+			int my = e.getY();
+			
+			
+			if(mx >= 530 && mx <= 730) {
+				// play Button
+				if(my >= 200 && my <= 275) {
+					GamePanel.state = GamePanel.STATE.GAME;
+				}
+				// quit Button
+				if(my >= 500 && my <= 575) {
+					System.exit(1);
+				}
+			}	
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }
