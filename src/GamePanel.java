@@ -32,7 +32,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	
 	public static enum STATE{
 		MENU,
-		GAME
+		GAME,
+		LEVEL
 	}
 	
 	public static STATE state = STATE.MENU;
@@ -73,10 +74,14 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		if(state == STATE.GAME) {
+		if(state == STATE.MENU) {
+			menu.mainMenu(g);
+			
+		} else if(state == STATE.LEVEL) {
+			menu.levelSelection(g);
+			
+		} else if(state == STATE.GAME) {
 			draw(g);
-		} else if(state == STATE.MENU) {
-			menu.render(g);
 		}
 	}
 	public void draw(Graphics g) {
@@ -226,13 +231,6 @@ public class GamePanel extends JPanel implements ActionListener{
 				                    					, 		SCREEN_HEIGHT/(3));
 	}
 	
-//	public void menu(Graphics g) {
-//		Font fnt0 = new Font("arial", Font.BOLD, 50);
-//		g.setFont(fnt0);
-//		g.setColor(Color.WHITE);
-//		g.drawString("SNAKE GAME", GamePanel.SCREEN_WIDTH/2, 100);
-//	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e){
 		
@@ -278,14 +276,22 @@ public class GamePanel extends JPanel implements ActionListener{
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-//			public Rectangle playButton = new Rectangle (530, 200, 200, 75);
-//			public Rectangle settingButton = new Rectangle (530, 350, 200, 75);
-//			public Rectangle quitButton = new Rectangle (530, 500, 200, 75);
 			
 			int mx = e.getX();
 			int my = e.getY();
 			
-			
+			if(state == STATE.MENU) {
+			if(mx >= 530 && mx <= 730) {
+				// play Button
+				if(my >= 200 && my <= 275) {
+					GamePanel.state = GamePanel.STATE.LEVEL;
+				}
+				// quit Button
+				if(my >= 500 && my <= 575) {
+					System.exit(1);
+				}
+			}
+			} else if(state == STATE.LEVEL) {
 			if(mx >= 530 && mx <= 730) {
 				// play Button
 				if(my >= 200 && my <= 275) {
@@ -295,7 +301,9 @@ public class GamePanel extends JPanel implements ActionListener{
 				if(my >= 500 && my <= 575) {
 					System.exit(1);
 				}
-			}	
+			}
+			}
+			
 		}
 
 		@Override
