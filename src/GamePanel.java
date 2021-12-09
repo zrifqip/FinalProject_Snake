@@ -35,8 +35,9 @@ public class GamePanel extends JPanel implements ActionListener{
 	
 	public static enum STATE{
 		MENU,
+		LEVEL,
 		GAME,
-		LEVEL
+		GAMEOVER
 	}
 	
 	public static STATE state = STATE.MENU;
@@ -55,6 +56,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void startGame(){
+		bodyParts = 3;
+		applesEaten = 0;
 		newApple();
 		x[0] = 1000;
 		y[0] = 350;
@@ -91,10 +94,11 @@ public class GamePanel extends JPanel implements ActionListener{
 			
 		} else if(state == STATE.GAME) {
 			draw(g);
-		}
+		} 
 	}
 	public void draw(Graphics g) {
 		
+		if(state == STATE.GAME) {
 		if(running) {
 			/*
 			for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++) {
@@ -124,7 +128,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			FontMetrics metrics = getFontMetrics(g.getFont());
 			g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
 		} else {
-			gameOver(g);
+//			gameOver(g);
+			GamePanel.state = GamePanel.STATE.GAMEOVER;
+			menu.gameOver(g, applesEaten);
+		}
 		}
 		
 	}
@@ -255,23 +262,23 @@ public class GamePanel extends JPanel implements ActionListener{
 			timer.stop();
 		}
 	}
-	public void gameOver(Graphics g) {
-		//Score
-		g.setColor(Color.red);
-		g.setFont( new Font("Arial",Font.BOLD, 40));
-		FontMetrics metrics1 = getFontMetrics(g.getFont());
-		g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-		//Game Over text
-		g.setColor(Color.red);
-		g.setFont( new Font("Ink Free",Font.BOLD, 75));
-		FontMetrics metrics2 = getFontMetrics(g.getFont());
-		g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
-		g.setFont(new Font("Arial",Font.BOLD,40));
-		g.drawString("               " + "Press space to back to main menu", (SCREEN_WIDTH - metrics2.stringWidth(
-															"Press space to back to main menu")
-																)
-				                    					, 		SCREEN_HEIGHT/(3));
-	}
+//	public void gameOver(Graphics g) {
+//		//Score
+//		g.setColor(Color.red);
+//		g.setFont( new Font("Arial",Font.BOLD, 40));
+//		FontMetrics metrics1 = getFontMetrics(g.getFont());
+//		g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+//		//Game Over text
+//		g.setColor(Color.red);
+//		g.setFont( new Font("Ink Free",Font.BOLD, 75));
+//		FontMetrics metrics2 = getFontMetrics(g.getFont());
+//		g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+//		g.setFont(new Font("Arial",Font.BOLD,40));
+//		g.drawString("               " + "Press space to back to main menu", (SCREEN_WIDTH - metrics2.stringWidth(
+//															"Press space to back to main menu")
+//																)
+//				                    					, 		SCREEN_HEIGHT/(3));
+//	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e){
@@ -327,6 +334,8 @@ public class GamePanel extends JPanel implements ActionListener{
 				// play Button
 				if(my >= 200 && my <= 275) {
 					GamePanel.state = GamePanel.STATE.LEVEL;
+					repaint();
+					System.out.println("menu 1");
 				}
 				// quit Button
 				if(my >= 500 && my <= 575) {
@@ -339,16 +348,36 @@ public class GamePanel extends JPanel implements ActionListener{
 				if(my >= 200 && my <= 275) {
 					level = 1;
 					GamePanel.state = GamePanel.STATE.GAME;
+					repaint();
+					System.out.println("level ");
 				}
 				// level 2
 				if(my >= 350 && my <= 425) {
 					level = 2;
 					GamePanel.state = GamePanel.STATE.GAME;
+					repaint();
+					System.out.println("level ");
 				}
 				// level 3
 				if(my >= 500 && my <= 575) {
 					level = 3;
 					GamePanel.state = GamePanel.STATE.GAME;
+					repaint();
+					System.out.println("level ");
+				}
+			}
+			}
+			if(state == STATE.GAMEOVER) {
+			if(my >=500 && my <= 575) {
+				// play again
+				if(mx >= 325 && mx <= 525) {
+					GamePanel.state = GamePanel.STATE.GAME;
+					startGame();
+				}
+				// main menu
+				if(mx >= 725 && mx <= 925){
+					GamePanel.state = GamePanel.STATE.MENU;
+					startGame();
 				}
 			}
 			}
