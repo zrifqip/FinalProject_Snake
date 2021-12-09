@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,20 +20,26 @@ public class GamePanel extends JPanel implements ActionListener{
 	final int x[] = new int[GAME_UNITS];
 	final int y[] = new int[GAME_UNITS];
 	private Timer timer;
+	private Random random;
+	private Menu menu;
 	private Image ball;
 	private Image apple;
 	private Image head;
 	private Image level2;
 	private Image level3;
+	private Sound eat;
+	private Sound buttonClick;
+	private Sound hit;
+	private Sound gameOver;
+	private Sound backsound;
 	int bodyParts = 3;
 	int applesEaten;
 	int appleX;
 	int appleY;
 	char direction = 'R';
 	boolean running = false;
-	Random random;
-	private Menu menu;
 	private int level;
+	
 	
 	public static enum STATE{
 		MENU,
@@ -45,7 +53,10 @@ public class GamePanel extends JPanel implements ActionListener{
 	public GamePanel(){
 		random = new Random();
 		menu = new Menu();
+		
 		loadImages();
+		loadSounds();
+		
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
 		this.setBackground(Color.black);
 		this.setFocusable(true);
@@ -53,6 +64,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		this.addMouseListener(new MouseInput());
 		startGame();
 		
+		backsound.playLoop();
 	}
 	
 	public void startGame(){
@@ -67,20 +79,37 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	private void loadImages() {
 
-		ImageIcon iid = new ImageIcon("src/resources/body.png");
+		ImageIcon iid = new ImageIcon("resources/body.png");
 		ball = iid.getImage();
 
-		ImageIcon iia = new ImageIcon("src/resources/apple.png");
+		ImageIcon iia = new ImageIcon("resources/apple.png");
 		apple = iia.getImage();
 
-		ImageIcon iih = new ImageIcon("src/resources/head.png");
+		ImageIcon iih = new ImageIcon("resources/head.png");
 		head = iih.getImage();
 		
-		ImageIcon ii2 = new ImageIcon("src/resources/level2.png");
+		ImageIcon ii2 = new ImageIcon("resources/level2.png");
 		level2 = ii2.getImage();
 		
-		ImageIcon ii3 = new ImageIcon("src/resources/level3.png");
+		ImageIcon ii3 = new ImageIcon("resources/level3.png");
 		level3 = ii3.getImage();
+	}
+	
+	private void loadSounds() {
+		hit = new Sound();
+		hit.setFile("sound/hit.wav");
+		
+		eat = new Sound();
+		eat.setFile("sound/eat.wav");
+		
+		buttonClick = new Sound();
+		buttonClick.setFile("sound/buttonClick.wav");
+		
+		gameOver= new Sound();
+		gameOver.setFile("sound/gameOver.wav");
+		
+		backsound = new Sound();
+		backsound.setFile("sound/backsound.wav");
 	}
 
 	public void paintComponent(Graphics g) {
@@ -100,12 +129,6 @@ public class GamePanel extends JPanel implements ActionListener{
 		
 		if(state == STATE.GAME) {
 		if(running) {
-			/*
-			for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++) {
-				g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-				g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
-			}
-			*/
 			
 			if(level == 2) {
 				g.drawImage(level2,0,0,null);
@@ -128,9 +151,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			FontMetrics metrics = getFontMetrics(g.getFont());
 			g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
 		} else {
-//			gameOver(g);
 			GamePanel.state = GamePanel.STATE.GAMEOVER;
 			menu.gameOver(g, applesEaten, level);
+			gameOver.play();
+			backsound.pauseLoop();
 		}
 		}
 		
@@ -182,6 +206,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			bodyParts++;
 			applesEaten++;
 			newApple();
+			eat.play();
 		}
 	}
 	public void checkCollisions() {
@@ -260,25 +285,9 @@ public class GamePanel extends JPanel implements ActionListener{
 
 		if(!running) {
 			timer.stop();
+			hit.play();
 		}
 	}
-//	public void gameOver(Graphics g) {
-//		//Score
-//		g.setColor(Color.red);
-//		g.setFont( new Font("Arial",Font.BOLD, 40));
-//		FontMetrics metrics1 = getFontMetrics(g.getFont());
-//		g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
-//		//Game Over text
-//		g.setColor(Color.red);
-//		g.setFont( new Font("Ink Free",Font.BOLD, 75));
-//		FontMetrics metrics2 = getFontMetrics(g.getFont());
-//		g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
-//		g.setFont(new Font("Arial",Font.BOLD,40));
-//		g.drawString("               " + "Press space to back to main menu", (SCREEN_WIDTH - metrics2.stringWidth(
-//															"Press space to back to main menu")
-//																)
-//				                    					, 		SCREEN_HEIGHT/(3));
-//	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e){
@@ -333,12 +342,13 @@ public class GamePanel extends JPanel implements ActionListener{
 			if(mx >= 530 && mx <= 730) {
 				// play Button
 				if(my >= 200 && my <= 275) {
+					buttonClick.play();
 					GamePanel.state = GamePanel.STATE.LEVEL;
 					repaint();
-					System.out.println("menu 1");
 				}
 				// quit Button
 				if(my >= 500 && my <= 575) {
+					buttonClick.play();
 					System.exit(1);
 				}
 			}
@@ -346,24 +356,24 @@ public class GamePanel extends JPanel implements ActionListener{
 			if(mx >= 530 && mx <= 730) {
 				// level 1
 				if(my >= 200 && my <= 275) {
+					buttonClick.play();
 					level = 1;
 					GamePanel.state = GamePanel.STATE.GAME;
 					repaint();
-					System.out.println("level ");
 				}
 				// level 2
 				if(my >= 350 && my <= 425) {
+					buttonClick.play();
 					level = 2;
 					GamePanel.state = GamePanel.STATE.GAME;
 					repaint();
-					System.out.println("level ");
 				}
 				// level 3
 				if(my >= 500 && my <= 575) {
+					buttonClick.play();
 					level = 3;
 					GamePanel.state = GamePanel.STATE.GAME;
 					repaint();
-					System.out.println("level ");
 				}
 			}
 			}
@@ -371,11 +381,15 @@ public class GamePanel extends JPanel implements ActionListener{
 			if(my >=500 && my <= 575) {
 				// play again
 				if(mx >= 325 && mx <= 525) {
+					buttonClick.play();
+					backsound.playLoop();
 					GamePanel.state = GamePanel.STATE.GAME;
 					startGame();
 				}
 				// main menu
 				if(mx >= 725 && mx <= 925){
+					buttonClick.play();
+					backsound.playLoop();
 					GamePanel.state = GamePanel.STATE.MENU;
 					startGame();
 				}
@@ -398,7 +412,6 @@ public class GamePanel extends JPanel implements ActionListener{
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
@@ -407,5 +420,6 @@ public class GamePanel extends JPanel implements ActionListener{
 			// TODO Auto-generated method stub
 			
 		}
+
 	}
 }

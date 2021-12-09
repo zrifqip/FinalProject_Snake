@@ -10,7 +10,7 @@ public class HighscoreManager {
 	private int highScore;
 	
 	public int getHighscore(int level) throws Exception {
-		FileReader fileInput = new FileReader("src/save/highscore.txt");
+		FileReader fileInput = new FileReader("save/highscore.txt");
         BufferedReader bufferInput = new BufferedReader(fileInput);
 		
         String data = bufferInput.readLine();
@@ -31,7 +31,7 @@ public class HighscoreManager {
 	}
 	
 	public void setHighscore(int level, int gameScore) throws Exception {
-		File database = new File("src/save/highscore.txt");
+		File database = new File("save/highscore.txt");
         FileReader fileInput = new FileReader(database);
         BufferedReader bufferedInput = new BufferedReader(fileInput);
         
