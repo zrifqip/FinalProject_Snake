@@ -130,7 +130,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		} else {
 //			gameOver(g);
 			GamePanel.state = GamePanel.STATE.GAMEOVER;
-			menu.gameOver(g, applesEaten);
+			menu.gameOver(g, applesEaten, level);
 		}
 		}
 		
