@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Menu{
-	
+	HighscoreManager highscoreManager = new HighscoreManager();
 	
 	public Rectangle rec1 = new Rectangle (530, 200, 200, 75);
 	public Rectangle rec2 = new Rectangle (530, 350, 200, 75);
@@ -49,7 +49,7 @@ public class Menu{
 		
 	}
 	
-	public void gameOver(Graphics g, int appleEaten) {
+	public void gameOver(Graphics g, int appleEaten, int level) {
 		Graphics2D g2d = (Graphics2D) g;
 		
 		Font fnt0 = new Font("Ink Free", Font.BOLD, 75);
@@ -60,7 +60,16 @@ public class Menu{
 		Font fnt1 = new Font("arial", Font.BOLD, 35);
 		g.setFont(fnt1);
 		g2d.drawString("Your score is : " + appleEaten, 470, 220);
-		g2d.drawString("Latest highscore is : ", 430, 320);
+		
+		try {
+			g2d.drawString("Latest highscore is : " + highscoreManager.getHighscore(level), 430, 320);
+			
+			if(appleEaten > highscoreManager.getHighscore(level)) {
+				highscoreManager.setHighscore(level, appleEaten);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		g.setColor(Color.WHITE);
