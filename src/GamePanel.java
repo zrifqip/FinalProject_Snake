@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Image ball;
 	private Image apple;
 	private Image head;
+	private Image level1;
 	private Image level2;
 	private Image level3;
 	private Sound eat;
@@ -91,6 +92,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		ImageIcon iih = new ImageIcon("resources/head.png");
 		head = iih.getImage();
 
+		ImageIcon ii1 = new ImageIcon("resources/level1.png");
+		level1 = ii1.getImage();
+
 		ImageIcon ii2 = new ImageIcon("resources/level2.png");
 		level2 = ii2.getImage();
 		
@@ -138,7 +142,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		if(state == STATE.GAME) {
 		if(running) {
 			
-			if(level == 2) {
+			if(level == 1){
+				g.drawImage(level1,0,0,null);
+			} else if(level == 2) {
 				g.drawImage(level2,0,0,null);
 			} else if(level == 3) {
 				g.drawImage(level3,0,0,null);
