@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +15,11 @@ public class GamePanel extends JPanel implements ActionListener{
 	static final int UNIT_SIZE = 50;
 	static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
 	static final int DELAY = 175;
-	final int x[] = new int[GAME_UNITS];
-	final int y[] = new int[GAME_UNITS];
+	final int [] x = new int[GAME_UNITS];
+	final int [] y = new int[GAME_UNITS];
 	private Timer timer;
-	private Random random;
-	private Menu menu;
+	private final Random random;
+	private final Menu menu;
 	private Image ball;
 	private Image apple;
 	private Image head;
@@ -41,13 +39,15 @@ public class GamePanel extends JPanel implements ActionListener{
 	private int level;
 	
 	
-	public static enum STATE{
+	public enum STATE{
 		MENU,
 		LEVEL,
 		GAME,
 		GAMEOVER
 	}
-	
+	private Image Background;
+	private Image LevelSelection;
+
 	public static STATE state = STATE.MENU;
 	
 	public GamePanel(){
@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		loadSounds();
 		
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
-		this.setBackground(Color.black);
+		this.setBackground(Color.BLACK);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
 		this.addMouseListener(new MouseInput());
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		
 		backsound.playLoop();
 	}
-	
+
 	public void startGame(){
 		bodyParts = 3;
 		applesEaten = 0;
@@ -79,6 +79,9 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	private void loadImages() {
 
+		ImageIcon bg = new ImageIcon("resources/background.png");
+		Background = bg.getImage();
+
 		ImageIcon iid = new ImageIcon("resources/body.png");
 		ball = iid.getImage();
 
@@ -87,12 +90,15 @@ public class GamePanel extends JPanel implements ActionListener{
 
 		ImageIcon iih = new ImageIcon("resources/head.png");
 		head = iih.getImage();
-		
+
 		ImageIcon ii2 = new ImageIcon("resources/level2.png");
 		level2 = ii2.getImage();
 		
 		ImageIcon ii3 = new ImageIcon("resources/level3.png");
 		level3 = ii3.getImage();
+
+		ImageIcon ls = new ImageIcon("resources/LevelSelection.png");
+		LevelSelection = ls.getImage();
 	}
 	
 	private void loadSounds() {
@@ -116,9 +122,11 @@ public class GamePanel extends JPanel implements ActionListener{
 		super.paintComponent(g);
 		
 		if(state == STATE.MENU) {
+			g.drawImage(Background,0,0,null);
 			menu.mainMenu(g);
 			
 		} else if(state == STATE.LEVEL) {
+			g.drawImage(LevelSelection,0,0,null);
 			menu.levelSelection(g);
 			
 		} else if(state == STATE.GAME) {
@@ -162,7 +170,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void newApple(){
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
-		
+		System.out.println(appleX);
+		System.out.println(appleY);
 		if(level==2) {
 			while((appleX>=45 && appleX<=1195 && appleY <= 45)
 					||(appleX>=45 && appleX<=1195 && appleY >= 645)
@@ -184,20 +193,12 @@ public class GamePanel extends JPanel implements ActionListener{
 			x[i] = x[i-1];
 			y[i] = y[i-1];
 		}
-		
-		switch(direction) {
-		case 'U':
-			y[0] = y[0] - UNIT_SIZE;
-			break;
-		case 'D':
-			y[0] = y[0] + UNIT_SIZE;
-			break;
-		case 'L':
-			x[0] = x[0] - UNIT_SIZE;
-			break;
-		case 'R':
-			x[0] = x[0] + UNIT_SIZE;
-			break;
+
+		switch (direction) {
+			case 'U' -> y[0] = y[0] - UNIT_SIZE;
+			case 'D' -> y[0] = y[0] + UNIT_SIZE;
+			case 'L' -> x[0] = x[0] - UNIT_SIZE;
+			case 'R' -> x[0] = x[0] + UNIT_SIZE;
 		}
 		
 	}
@@ -212,8 +213,9 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void checkCollisions() {
 		//checks if head collides with body
 		for(int i = bodyParts;i>0;i--) {
-			if((x[0] == x[i])&& (y[0] == y[i])) {
+			if ((x[0] == x[i]) && (y[0] == y[i])) {
 				running = false;
+				break;
 			}
 		}
 
