@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +44,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	
 	public enum STATE{
 		MENU,
+		ABOUT,
 		LEVEL,
 		GAME,
 		GAMEOVER
@@ -129,6 +132,8 @@ public class GamePanel extends JPanel implements ActionListener{
 			g.drawImage(Background,0,0,null);
 			menu.mainMenu(g);
 			
+		} else if (state == STATE.ABOUT) {
+			menu.about(g);
 		} else if(state == STATE.LEVEL) {
 			g.drawImage(LevelSelection,0,0,null);
 			menu.levelSelection(g);
@@ -176,8 +181,6 @@ public class GamePanel extends JPanel implements ActionListener{
 	public void newApple(){
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
-		System.out.println(appleX);
-		System.out.println(appleY);
 		if(level==2) {
 			while((appleX>=45 && appleX<=1195 && appleY <= 45)
 					||(appleX>=45 && appleX<=1195 && appleY >= 645)
@@ -354,12 +357,26 @@ public class GamePanel extends JPanel implements ActionListener{
 					GamePanel.state = GamePanel.STATE.LEVEL;
 					repaint();
 				}
+				// About button
+				if(my >= 350 && my <= 425) {
+					buttonClick.play();
+					GamePanel.state = GamePanel.STATE.ABOUT;
+					repaint();
+				}
 				// quit Button
 				if(my >= 500 && my <= 575) {
 					buttonClick.play();
 					System.exit(1);
 				}
-			}
+			} 
+			} else if(state == STATE.ABOUT) {
+			if(mx >= 50 && mx <= 210) {
+				if(my >= 590 && my <= 650) {
+					buttonClick.play();
+					GamePanel.state = GamePanel.STATE.MENU;
+					repaint();
+				}
+			} 
 			} else if(state == STATE.LEVEL) {
 			if(mx >= 530 && mx <= 730) {
 				// level 1
@@ -381,6 +398,13 @@ public class GamePanel extends JPanel implements ActionListener{
 					buttonClick.play();
 					level = 3;
 					GamePanel.state = GamePanel.STATE.GAME;
+					repaint();
+				}
+				
+			} else if(mx >= 50 && mx <= 210) {
+				if(my >= 590 && my <= 650) {
+					buttonClick.play();
+					GamePanel.state = GamePanel.STATE.MENU;
 					repaint();
 				}
 			}
@@ -428,6 +452,5 @@ public class GamePanel extends JPanel implements ActionListener{
 			// TODO Auto-generated method stub
 			
 		}
-
 	}
 }
