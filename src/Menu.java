@@ -13,6 +13,7 @@ public class Menu{
 	private Image PlayAgain;
 	private Image MainMenu;
 	private Image Back;
+	private Image about;
 	
 	Rectangle rec = new Rectangle(50, 1140, 160, 60);
 
@@ -35,6 +36,10 @@ public class Menu{
 		PlayAgain = pa.getImage();
 		ImageIcon mm = new ImageIcon("resources/MainMenu.png");
 		MainMenu = mm.getImage();
+		ImageIcon ia = new ImageIcon("resources/InAbout.png");
+		about = ia.getImage();
+
+
 		ImageIcon bck = new ImageIcon("resources/Back.png");
 		Back = bck.getImage();
 		
@@ -60,6 +65,7 @@ public class Menu{
 	
 	public void about(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		g.drawImage(about,0,0,null);
 		g2d.drawImage(Back,50,590,null);
 	}
 	

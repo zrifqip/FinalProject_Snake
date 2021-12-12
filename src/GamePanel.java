@@ -33,8 +33,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Sound hit;
 	private Sound gameOver;
 	private Sound backsound;
-	int bodyParts = 3;
-	int applesEaten;
+	private int bodyParts = 3;
+	private int applesEaten;
 	int appleX;
 	int appleY;
 	char direction = 'R';
@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	private int level;
 	
 	
-	public enum STATE{
+	private enum STATE{
 		MENU,
 		ABOUT,
 		LEVEL,
@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Image Background;
 	private Image LevelSelection;
 
-	public static STATE state = STATE.MENU;
+	private static STATE state = STATE.MENU;
 	
 	public GamePanel(){
 		random = new Random();
@@ -71,7 +71,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		backsound.playLoop();
 	}
 
-	public void startGame(){
+	private void startGame(){
 		bodyParts = 3;
 		applesEaten = 0;
 		newApple();
@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			draw(g);
 		} 
 	}
-	public void draw(Graphics g) {
+	private void draw(Graphics g) {
 		
 		if(state == STATE.GAME) {
 		if(running) {
@@ -178,7 +178,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		
 	}
-	public void newApple(){
+	private void newApple(){
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
 		if(level==2) {
@@ -219,7 +219,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			eat.play();
 		}
 	}
-	public void checkCollisions() {
+	private void checkCollisions() {
 		//checks if head collides with body
 		for(int i = bodyParts;i>0;i--) {
 			if ((x[0] == x[i]) && (y[0] == y[i])) {
@@ -311,7 +311,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		repaint();
 	}
 	
-	public class MyKeyAdapter extends KeyAdapter{
+	private class MyKeyAdapter extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if(state == STATE.GAME) {
