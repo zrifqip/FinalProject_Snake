@@ -19,6 +19,13 @@ public class GamePanel extends JPanel implements ActionListener{
 	static final int DELAY = 175;
 	final int [] x = new int[GAME_UNITS];
 	final int [] y = new int[GAME_UNITS];
+	private int bodyParts;
+	private int level;
+	private int applesEaten;
+	private int appleX;
+	private int appleY;
+	private char direction = 'R';
+	private boolean running = false;
 	private Timer timer;
 	private final Random random;
 	private final Menu menu;
@@ -33,14 +40,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Sound hit;
 	private Sound gameOver;
 	private Sound backsound;
-	private int bodyParts = 3;
-	private int applesEaten;
-	int appleX;
-	int appleY;
-	char direction = 'R';
-	boolean running = false;
-	private int level;
-	
+	private Image background;
+	private Image levelSelection;
 	
 	private enum STATE{
 		MENU,
@@ -49,8 +50,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		GAME,
 		GAMEOVER
 	}
-	private Image Background;
-	private Image LevelSelection;
+	
 
 	private static STATE state = STATE.MENU;
 	
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	private void loadImages() {
 
 		ImageIcon bg = new ImageIcon("resources/background.png");
-		Background = bg.getImage();
+		background = bg.getImage();
 
 		ImageIcon iid = new ImageIcon("resources/body.png");
 		ball = iid.getImage();
@@ -105,7 +105,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		level3 = ii3.getImage();
 
 		ImageIcon ls = new ImageIcon("resources/LevelSelection.png");
-		LevelSelection = ls.getImage();
+		levelSelection = ls.getImage();
 	}
 	
 	private void loadSounds() {
@@ -129,19 +129,20 @@ public class GamePanel extends JPanel implements ActionListener{
 		super.paintComponent(g);
 		
 		if(state == STATE.MENU) {
-			g.drawImage(Background,0,0,null);
+			g.drawImage(background,0,0,null);
 			menu.mainMenu(g);
 			
 		} else if (state == STATE.ABOUT) {
 			menu.about(g);
 		} else if(state == STATE.LEVEL) {
-			g.drawImage(LevelSelection,0,0,null);
+			g.drawImage(levelSelection,0,0,null);
 			menu.levelSelection(g);
 			
 		} else if(state == STATE.GAME) {
 			draw(g);
 		} 
 	}
+	
 	private void draw(Graphics g) {
 		
 		if(state == STATE.GAME) {
@@ -178,6 +179,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		
 	}
+	
 	private void newApple(){
 		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
 		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
@@ -211,6 +213,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		
 	}
+	
 	public void checkApple() {
 		if((x[0] == appleX) && (y[0] == appleY)) {
 			bodyParts++;
@@ -219,6 +222,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			eat.play();
 		}
 	}
+	
 	private void checkCollisions() {
 		//checks if head collides with body
 		for(int i = bodyParts;i>0;i--) {

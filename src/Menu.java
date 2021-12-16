@@ -2,77 +2,77 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Menu{
-	HighscoreManager highscoreManager = new HighscoreManager();
-	private Image StartButton;
-	private Image AboutButton;
-	private Image ExitButton;
-	private Image Level1;
-	private Image Level2;
-	private Image Level3;
-	private Image GameOver;
-	private Image PlayAgain;
-	private Image MainMenu;
-	private Image Back;
+	private HighscoreManager highscoreManager;
+	private Image startButton;
+	private Image aboutButton;
+	private Image exitButton;
+	private Image level1;
+	private Image level2;
+	private Image level3;
+	private Image gameOver;
+	private Image playAgain;
+	private Image mainMenu;
+	private Image back;
 	private Image about;
 	
-	Rectangle rec = new Rectangle(50, 1140, 160, 60);
+	public Menu() {
+		highscoreManager = new HighscoreManager();
+	}
 
 	private void loadimage(){
 		ImageIcon sb = new ImageIcon("resources/Start.png");
-		StartButton = sb.getImage();
+		startButton = sb.getImage();
 		ImageIcon ab = new ImageIcon("resources/About.png");
-		AboutButton = ab.getImage();
+		aboutButton = ab.getImage();
 		ImageIcon eb = new ImageIcon("resources/Exit.png");
-		ExitButton = eb.getImage();
+		exitButton = eb.getImage();
 		ImageIcon lv1 = new ImageIcon("resources/Level 1.png");
-		Level1 = lv1.getImage();
+		level1 = lv1.getImage();
 		ImageIcon lv2 = new ImageIcon("resources/Level 2.png");
-		Level2 = lv2.getImage();
+		level2 = lv2.getImage();
 		ImageIcon lv3 = new ImageIcon("resources/Level 3.png");
-		Level3 = lv3.getImage();
+		level3 = lv3.getImage();
 		ImageIcon go = new ImageIcon("resources/GameOver.png");
-		GameOver = go.getImage();
+		gameOver = go.getImage();
 		ImageIcon pa = new ImageIcon("resources/PlayAgain.png");
-		PlayAgain = pa.getImage();
+		playAgain = pa.getImage();
 		ImageIcon mm = new ImageIcon("resources/MainMenu.png");
-		MainMenu = mm.getImage();
+		mainMenu = mm.getImage();
 		ImageIcon ia = new ImageIcon("resources/InAbout.png");
 		about = ia.getImage();
-
-
 		ImageIcon bck = new ImageIcon("resources/Back.png");
-		Back = bck.getImage();
+		back = bck.getImage();
 		
 	}
 	public void mainMenu(Graphics g) {
 		loadimage();
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(StartButton,530,200,null);
-		g2d.drawImage(AboutButton,530,350,null);
-		g2d.drawImage(ExitButton,530,500,null);
+		g2d.drawImage(startButton,530,200,null);
+		g2d.drawImage(aboutButton,530,350,null);
+		g2d.drawImage(exitButton,530,500,null);
 		
 	}
 	
 	public void levelSelection(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(Level1,530,200,null);
-		g2d.drawImage(Level2,530,350,null);
-		g2d.drawImage(Level3,530,500,null);
+		g2d.drawImage(level1,530,200,null);
+		g2d.drawImage(level2,530,350,null);
+		g2d.drawImage(level3,530,500,null);
 		
-		g2d.drawImage(Back,50,590,null);
+		g2d.drawImage(back,50,590,null);
 
 	}
 	
 	public void about(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g.drawImage(about,0,0,null);
-		g2d.drawImage(Back,50,590,null);
+		g2d.drawImage(back,50,590,null);
 	}
 	
 	public void gameOver(Graphics g, int appleEaten, int level) {
 		Graphics2D g2d = (Graphics2D) g;
 		
-		g.drawImage(GameOver,0,0,null);
+		g.drawImage(gameOver,0,0,null);
 		
 		Font fnt0 = new Font("Ink Free", Font.BOLD, 70);
 		g.setFont(fnt0);
@@ -102,7 +102,7 @@ public class Menu{
 			e.printStackTrace();
 		}
 		
-		g.drawImage(PlayAgain,325,500,null);
-		g.drawImage(MainMenu,725,500,null);
+		g.drawImage(playAgain,325,500,null);
+		g.drawImage(mainMenu,725,500,null);
 	}
 }
