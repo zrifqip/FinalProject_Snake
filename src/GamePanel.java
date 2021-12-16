@@ -35,23 +35,13 @@ public class GamePanel extends JPanel implements ActionListener{
 	private Image level1;
 	private Image level2;
 	private Image level3;
+	private Image background;
+	private Image levelSelection;
 	private Sound eat;
 	private Sound buttonClick;
 	private Sound hit;
 	private Sound gameOver;
 	private Sound backsound;
-	private Image background;
-	private Image levelSelection;
-	
-	private enum STATE{
-		MENU,
-		ABOUT,
-		LEVEL,
-		GAME,
-		GAMEOVER
-	}
-	
-
 	private static STATE state = STATE.MENU;
 	
 	public GamePanel(){
@@ -171,7 +161,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			FontMetrics metrics = getFontMetrics(g.getFont());
 			g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
 		} else {
-			GamePanel.state = GamePanel.STATE.GAMEOVER;
+			GamePanel.state = STATE.GAMEOVER;
 			menu.gameOver(g, applesEaten, level);
 			gameOver.play();
 			backsound.pauseLoop();
@@ -358,13 +348,13 @@ public class GamePanel extends JPanel implements ActionListener{
 				// play Button
 				if(my >= 200 && my <= 275) {
 					buttonClick.play();
-					GamePanel.state = GamePanel.STATE.LEVEL;
+					GamePanel.state = STATE.LEVEL;
 					repaint();
 				}
 				// About button
 				if(my >= 350 && my <= 425) {
 					buttonClick.play();
-					GamePanel.state = GamePanel.STATE.ABOUT;
+					GamePanel.state = STATE.ABOUT;
 					repaint();
 				}
 				// quit Button
@@ -377,7 +367,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			if(mx >= 50 && mx <= 210) {
 				if(my >= 590 && my <= 650) {
 					buttonClick.play();
-					GamePanel.state = GamePanel.STATE.MENU;
+					GamePanel.state = STATE.MENU;
 					repaint();
 				}
 			} 
@@ -387,28 +377,28 @@ public class GamePanel extends JPanel implements ActionListener{
 				if(my >= 200 && my <= 275) {
 					buttonClick.play();
 					level = 1;
-					GamePanel.state = GamePanel.STATE.GAME;
+					GamePanel.state = STATE.GAME;
 					repaint();
 				}
 				// level 2
 				if(my >= 350 && my <= 425) {
 					buttonClick.play();
 					level = 2;
-					GamePanel.state = GamePanel.STATE.GAME;
+					GamePanel.state = STATE.GAME;
 					repaint();
 				}
 				// level 3
 				if(my >= 500 && my <= 575) {
 					buttonClick.play();
 					level = 3;
-					GamePanel.state = GamePanel.STATE.GAME;
+					GamePanel.state = STATE.GAME;
 					repaint();
 				}
 				
 			} else if(mx >= 50 && mx <= 210) {
 				if(my >= 590 && my <= 650) {
 					buttonClick.play();
-					GamePanel.state = GamePanel.STATE.MENU;
+					GamePanel.state = STATE.MENU;
 					repaint();
 				}
 			}
@@ -419,14 +409,14 @@ public class GamePanel extends JPanel implements ActionListener{
 				if(mx >= 325 && mx <= 525) {
 					buttonClick.play();
 					backsound.playLoop();
-					GamePanel.state = GamePanel.STATE.GAME;
+					GamePanel.state = STATE.GAME;
 					startGame();
 				}
 				// main menu
 				if(mx >= 725 && mx <= 925){
 					buttonClick.play();
 					backsound.playLoop();
-					GamePanel.state = GamePanel.STATE.MENU;
+					GamePanel.state = STATE.MENU;
 					startGame();
 				}
 			}

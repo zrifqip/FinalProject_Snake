@@ -4,7 +4,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class Sound {
-	Clip clip;
+	private Clip clip;
 	
 	public void setFile(String soundFileName){
 		
