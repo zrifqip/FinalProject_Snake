@@ -18,7 +18,8 @@ public class Menu{
 	public Menu() {
 		highscoreManager = new HighscoreManager();
 	}
-
+	
+	// Image untuk game
 	private void loadimage(){
 		ImageIcon sb = new ImageIcon("resources/Start.png");
 		startButton = sb.getImage();
@@ -44,6 +45,7 @@ public class Menu{
 		back = bck.getImage();
 		
 	}
+	// main menu
 	public void mainMenu(Graphics g) {
 		loadimage();
 		Graphics2D g2d = (Graphics2D) g;
@@ -52,7 +54,7 @@ public class Menu{
 		g2d.drawImage(exitButton,530,500,null);
 		
 	}
-	
+	// Select level
 	public void levelSelection(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(level1,530,200,null);
@@ -62,13 +64,13 @@ public class Menu{
 		g2d.drawImage(back,50,590,null);
 
 	}
-	
+	// About the game
 	public void about(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g.drawImage(about,0,0,null);
 		g2d.drawImage(back,50,590,null);
 	}
-	
+	// Game over screen
 	public void gameOver(Graphics g, int appleEaten, int level) {
 		Graphics2D g2d = (Graphics2D) g;
 		
